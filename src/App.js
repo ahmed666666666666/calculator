@@ -18,7 +18,7 @@ class Calculator extends React.Component {
   render(){
   return (
     <div className="container">
-      <Screen  v = {eq} />
+      <Screen output={eq} />
       <CalculatorBody/>
     </div>
   );
@@ -33,9 +33,12 @@ class Screen extends React.Component {
     }
 
   }
+  componentWillReceiveProps(){
+    this.setState({val:eq.join("")})
+  }
   render(){
   return (
-    <div className="screen">{this.props.v}</div>
+    <div className="screen">{this.state.val}</div>
   );
 }
 }
@@ -45,6 +48,7 @@ class CalculatorBody extends React.Component {
   render(){
   return (
     <div className="body">
+          
       <Button color = 'rgba(197,195,204)' value="AC"/>
       <Button color = 'rgba(197,195,204)' value="+-" />
       <Button color = 'rgba(197,195,204)'  value="%"/>
