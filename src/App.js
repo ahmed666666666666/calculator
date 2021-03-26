@@ -18,7 +18,6 @@ class Calculator extends React.Component {
   render(){
   return (
     <div className="container">
-      <Screen output={eq} />
       <CalculatorBody/>
     </div>
   );
@@ -26,49 +25,56 @@ class Calculator extends React.Component {
 }
 
 class Screen extends React.Component {
-  constructor(){
-    super()
-    this.state = {
-      val:'0',
-    }
 
-  }
-  componentWillReceiveProps(){
-    this.setState({val:eq.join("")})
-  }
   render(){
   return (
-    <div className="screen">{this.state.val}</div>
+    <div className="screen">{this.props.on}</div>
   );
 }
 }
 
 class CalculatorBody extends React.Component {
-  
+    constructor(){
+      super()
+      this.state = {
+        input:"",
+      }
+      this.display  = this.display.bind(this)
+      this.result = this.result.bind(this)
+    }
+    display(val){
+      this.setState({input:this.state.input+val})
+    }
+    
+    result(val){
+      this.setState({input:val})
+    }
   render(){
   return (
+    <div className="container">
+    <Screen on = {this.state.input}/>
     <div className="body">
-          
-      <Button color = 'rgba(197,195,204)' value="AC"/>
-      <Button color = 'rgba(197,195,204)' value="+-" />
-      <Button color = 'rgba(197,195,204)'  value="%"/>
-      <Button color = 'rgba(251,149,24)' value="/" tcolor="white"/>
-      <Button color = 'rgba(244,244,231)' value="7" />
-      <Button color = 'rgba(244,244,231)' value="8"  />
-      <Button color = 'rgba(244,244,231)' value="9"  />
-      <Button color = 'rgba(251,149,24)' value="*"  tcolor="white"/>
-      <Button color = 'rgba(244,244,231)' value="4"  />
-      <Button color = 'rgba(244,244,231)' value="5"  />
-      <Button color = 'rgba(244,244,231)' value="6"  />
-      <Button color = 'rgba(251,149,24)' value="-" tcolor="white" />
-      <Button color = 'rgba(244,244,231)' value="1"  />
-      <Button color = 'rgba(244,244,231)' value="2"  />
-      <Button color = 'rgba(244,244,231)' value="3"  />
-      <Button color = 'rgba(251,149,24)' value="+" tcolor="white" />
-      <Button color = 'rgba(244,244,231)' value="0"  border="none" />
-      <Button color = 'rgba(244,244,231)'   value=" " border="none"  />
-      <Button color = 'rgba(244,244,231)'   value="."  />
-      <Equal color = 'rgba(251,149,24)' value="=" tcolor="white" />
+      <ButtonClear handleclick = {this.result}  color = 'rgba(197,195,204)' value="AC"/>
+      <Button handleclick = {this.display}  color = 'rgba(197,195,204)' value="+" />
+      <Button handleclick = {this.display} color = 'rgba(197,195,204)'  value="%"/>
+      <Button handleclick = {this.display} color = 'rgba(251,149,24)' value="/" tcolor="white"/>
+      <Button handleclick = {this.display} color = 'rgba(244,244,231)' value="7" />
+      <Button handleclick = {this.display} color = 'rgba(244,244,231)' value="8"  />
+      <Button handleclick = {this.display} color = 'rgba(244,244,231)' value="9"  />
+      <Button handleclick = {this.display} color = 'rgba(251,149,24)' value="*"  tcolor="white"/>
+      <Button handleclick = {this.display} color = 'rgba(244,244,231)' value="4"  />
+      <Button  handleclick = {this.display} color = 'rgba(244,244,231)' value="5"  />
+      <Button  handleclick = {this.display} color = 'rgba(244,244,231)' value="6"  />
+      <Button color = 'rgba(251,149,24)' value="-" tcolor="white"  handleclick = {this.display} />
+      <Button color = 'rgba(244,244,231)' value="1"  handleclick = {this.display} />
+      <Button color = 'rgba(244,244,231)' value="2"  handleclick = {this.display} />
+      <Button color = 'rgba(244,244,231)' value="3"  handleclick = {this.display} />
+      <Button color = 'rgba(251,149,24)' value="+" tcolor="white" handleclick = {this.display} />
+      <Button color = 'rgba(244,244,231)' value="0"  border="none"  handleclick = {this.display} />
+      <Button color = 'rgba(244,244,231)'   value=" " border="none"  handleclick = {this.display} />
+      <Button color = 'rgba(244,244,231)'   value="."  handleclick = {this.display} />
+      <Equal handleclick = {this.result} color = 'rgba(251,149,24)' value="=" tcolor="white"  />
+    </div>
     </div>
   );
 }
@@ -76,8 +82,9 @@ class CalculatorBody extends React.Component {
 class Button extends React.Component {
     
     displayeq = ()=>{
-      eq.push(this.props.value)
-        console.log(eq)
+     eq.push(this.props.value)
+     console.log(eq)
+      this.props.handleclick(this.props.value)
     }
   render(){
   return (
@@ -88,14 +95,30 @@ class Button extends React.Component {
 }
 }
 
+class ButtonClear extends React.Component {
+    
+  displayeq = ()=>{
+   eq = []
+    this.props.handleclick("")
+  }
+render(){
+return (
+  <button onClick={this.displayeq} style={{'background':this.props.color,color:this.props.tcolor ,'border-right': this.props.border,'border-left': this.props.border}} className="button">
+    {this.props.value}
+  </button>
+);
+}
+}
+
 
 class Equal extends React.Component {
     
   result = ()=>{
     var res = eval(eq.join(""))
       console.log(res)
+      this.props.handleclick(res)
       eq = []
-  }
+    }
 render(){
 return (
   <button onClick={this.result} style={{'background':this.props.color,color:this.props.tcolor ,'border-right': this.props.border,'border-left': this.props.border}} className="button">
